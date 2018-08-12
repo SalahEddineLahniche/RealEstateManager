@@ -23,7 +23,10 @@ def get_building(building_id):
 
 @app.route('/buildings')
 def get_all_buildings():
-    return json.dumps(list(x.__dict__ for x in sess.get_buildings(None)))
+    dct = None
+    if request.args:
+        dct = dict(map(lambda k: (k, request.args[k]), request.args.keys()))
+    return json.dumps(list(x.__dict__ for x in sess.get_buildings(dct)))
 
 
 @app.route('/owner/<owner_id>')
@@ -34,7 +37,10 @@ def get_owner(owner_id):
 
 @app.route('/owners')
 def get_all_owners():
-    return json.dumps(list(x.__dict__ for x in sess.get_owners(None)))
+    dct = None
+    if request.args:
+        dct = dict(map(lambda k: (k, request.args[k]), request.args.keys()))
+    return json.dumps(list(x.__dict__ for x in sess.get_owners(dct)))
 
 
 @app.route('/login', methods=["GET"])

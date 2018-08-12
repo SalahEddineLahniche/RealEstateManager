@@ -57,6 +57,7 @@ class RealEstateDbSession:
             one = False
         else:
             lst = list("{k}={v}".format(k=k, v=repr(v)) for k, v in dct.items())
+            print("SELECT * FROM {} WHERE {}".format(tbl, ' AND '.join(lst)))
             rslt = self.cur.execute("SELECT * FROM {} WHERE {}".format(tbl, ' AND '.join(lst)))
         if one:
             return rslt.fetchone()
