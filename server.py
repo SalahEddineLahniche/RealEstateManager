@@ -1,6 +1,6 @@
 from flask import Flask, request
-from RealEstateManager import dbengine as db
-from RealEstateManager.dbengine import Building, Owner
+import dbengine as db
+from dbengine import Building, Owner
 import json
 
 
@@ -88,6 +88,10 @@ def edit_building(building_id):
 def add_building():
     if not curr_user:
         return "Login first"
+    if "building_id" in request.args:
+        rslt = sess.get_building(Building(building_id=request.args["building_id"]))
+        if rslt:
+            return "building already exists"
     ks = set(request.args.keys()) & set(Building().__dict__.keys())
     dct = dict(map(lambda k: (k, request.args[k]), ks))
     dct['owner'] = curr_user.owner_id
@@ -136,6 +140,10 @@ def delete_owner(owner_id):
 
 @app.route('/owners/add', methods=["GET"])
 def add_owner():
+    if "owner_id" in request.args:
+        rslt = sess.get_owner(Owner(owner_id=request.args["owner_id"]))
+        if rslt:
+            return "Owner already exists"
     ks = set(request.args.keys()) & set(Owner().__dict__.keys())
     dct = dict(map(lambda k: (k, request.args[k]), ks))
     print(request.args.keys(), Owner().__dict__.keys())
